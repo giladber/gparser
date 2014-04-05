@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 /**
+ * Basic string parser.
  * Created by Gilad Ber on 4/4/14.
  */
-public class BasicRawParser
+public class BasicRawParser implements StringParser
 {
 	private final ParserModel model;
 	private final ParserMetaData metaData;
@@ -18,6 +19,13 @@ public class BasicRawParser
 		this.model = new ParserModel(metaData);
 	}
 
+	@Override
+	/**
+	 * Parses the data from the input stream into a ParsedFileData object.
+	 * Since this method accepts any stream and does not perform any intermediate actions on the input stream,
+	 * it is the caller's responsibility to make sure this is not an infinite stream, otherwise the method will
+	 * never terminate.
+	 */
 	public ParsedFileData parse(Stream<String> linesStream, String sourceName) throws IOException
 	{
 		linesStream.
