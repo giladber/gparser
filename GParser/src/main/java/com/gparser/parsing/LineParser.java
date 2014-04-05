@@ -5,5 +5,5 @@ package com.gparser.parsing;
  */
 public interface LineParser
 {
-    public  LineRepresentation parseLine(String line);
+	public LineRepresentation parseLine(String line);
 }

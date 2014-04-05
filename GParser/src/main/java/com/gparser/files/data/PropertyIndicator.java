@@ -5,10 +5,10 @@ package com.gparser.files.data;
  */
 public abstract class PropertyIndicator
 {
-    public final String value;
+	public final String value;
 
-    public PropertyIndicator(String val)
-    {
-        this.value = val;
-    }
+	public PropertyIndicator(String val)
+	{
+		this.value = val;
+	}
 }

@@ -5,5 +5,5 @@ package com.gparser.editors;
  */
 public interface LineEditor
 {
-    public String editLine(String line);
+	public String editLine(String line);
 }
