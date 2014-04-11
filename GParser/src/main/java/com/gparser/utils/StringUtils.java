@@ -1,5 +1,7 @@
 package com.gparser.utils;
 
+import com.gparser.raw.Line;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,5 +26,18 @@ public final class StringUtils
 	public static String[] splitBySpaces(String str)
 	{
 		return str.split("\\s+");
+	}
+
+	public static String[] lineToArray(Line line)
+	{
+		return splitBySpaces(line.getData());
+	}
+
+	public static <T> String join(Stream<T> stream, String separator)
+	{
+		StringBuilder builder = new StringBuilder();
+		stream.forEachOrdered(val -> builder.append(val.toString()).append(separator));
+
+		return builder.toString();
 	}
 }

@@ -3,6 +3,7 @@ package com.gparser.raw;
 import com.gparser.utils.StringUtils;
 
 /**
+ * Builder for parsed file data (doh).
  * Created by Gilad Ber on 4/4/14.
  */
 public class ParsedFileDataBuilder

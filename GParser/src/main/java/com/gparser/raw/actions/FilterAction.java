@@ -1,6 +1,7 @@
 package com.gparser.raw.actions;
 
 import com.gparser.raw.ChannelFileData;
+import com.gparser.raw.Line;
 import com.gparser.utils.StringUtils;
 
 import java.util.List;
@@ -25,8 +26,9 @@ public class FilterAction implements ChannelAction
 	public ChannelFileData perform(ChannelFileData data)
 	{
 		System.out.println("raw data: " + data.getRowData());
-		List<String> filtered = data.getRowData().stream().
-			filter(row -> filter.apply(StringUtils.splitBySpaces(row)[numChannelToFilter - 1])).
+		List<Line> filtered = data.getRowData().
+			stream().
+			filter(row -> filter.apply(StringUtils.splitBySpaces(row.getData())[numChannelToFilter - 1])).
 			collect(Collectors.toList());
 
 		System.out.println(filtered);

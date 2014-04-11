@@ -26,11 +26,11 @@ public class BasicRawParser implements StringParser
 	 * it is the caller's responsibility to make sure this is not an infinite stream, otherwise the method will
 	 * never terminate.
 	 */
-	public ParsedFileData parse(Stream<String> linesStream, String sourceName) throws IOException
+	public ParsedFileData parse(Stream<Line> linesStream, String sourceName) throws IOException
 	{
 		linesStream.
-			forEachOrdered(s -> {
-				String trimmed = s.trim();
+			forEachOrdered(line -> {
+				String trimmed = line.getData().trim();
 				if (trimmed.startsWith(metaData.commentIndicator))
 				{
 					model.addComment(trimmed);
@@ -41,7 +41,7 @@ public class BasicRawParser implements StringParser
 				}
 				else
 				{
-					model.addDataLine(trimmed);
+					model.addDataLine(new Line(line.getIndex(), trimmed));
 				}
 			});
 		return builder.build(model, sourceName);

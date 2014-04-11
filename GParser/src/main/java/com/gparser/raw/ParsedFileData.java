@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Represents the structure of data after being parsed into memory.
  * Created by Gilad Ber on 4/4/14.
  */
 public class ParsedFileData
@@ -13,9 +14,9 @@ public class ParsedFileData
 	private final ParserMetaData metaData;
 	private final List<String> titles;
 	private final List<String> commentedLines;
-	private final List<String> dataLines;
+	private final List<Line> dataLines;
 
-	private ParsedFileData(String fileName, ParserMetaData metaData, List<String> titles, List<String> commentedLines, List<String> dataLines)
+	private ParsedFileData(String fileName, ParserMetaData metaData, List<String> titles, List<String> commentedLines, List<Line> dataLines)
 	{
 		this.commentedLines = commentedLines;
 		this.dataLines = dataLines;
@@ -44,7 +45,7 @@ public class ParsedFileData
 		return commentedLines;
 	}
 
-	public List<String> getDataLines()
+	public List<Line> getDataLines()
 	{
 		return dataLines;
 	}
@@ -55,7 +56,7 @@ public class ParsedFileData
 		private ParserMetaData metaData = new ParserMetaData.Builder().build();
 		private List<String> titles = Collections.emptyList();
 		private List<String> commentedLines = Collections.emptyList();
-		private List<String> dataLines = Collections.emptyList();
+		private List<Line> dataLines = Collections.emptyList();
 
 		public Builder fileName(String name)
 		{
@@ -86,7 +87,7 @@ public class ParsedFileData
 			return this;
 		}
 
-		public Builder dataLines(List<String> lines)
+		public Builder dataLines(List<Line> lines)
 		{
 			this.dataLines = lines;
 			return this;

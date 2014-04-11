@@ -11,7 +11,7 @@ public class ParserModel
 	private final ParserMetaData metaData;
 	private final List<String> commentLines = new ArrayList<>();
 	private String titleLine;
-	private final List<String> data = new ArrayList<>();
+	private final List<Line> data = new ArrayList<>();
 
 	public ParserModel(ParserMetaData metaData)
 	{
@@ -28,7 +28,7 @@ public class ParserModel
 		this.titleLine = titleLine;
 	}
 
-	public void addDataLine(String dataLine)
+	public void addDataLine(Line dataLine)
 	{
 		this.data.add(dataLine);
 	}
@@ -48,7 +48,7 @@ public class ParserModel
 		return titleLine;
 	}
 
-	public List<String> getData()
+	public List<Line> getData()
 	{
 		return data;
 	}

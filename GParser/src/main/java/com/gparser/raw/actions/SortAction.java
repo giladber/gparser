@@ -1,6 +1,7 @@
 package com.gparser.raw.actions;
 
 import com.gparser.raw.ChannelFileData;
+import com.gparser.raw.Line;
 import com.gparser.utils.StringUtils;
 
 import java.util.*;
@@ -25,18 +26,20 @@ public class SortAction implements ChannelAction
 	@Override
 	public ChannelFileData perform(ChannelFileData data)
 	{
-		final Comparator<String> rowComparator = this::compareLines;
+		final Comparator<Line> rowComparator = this::compareLines;
 
-		List<String> sortedRowData = data.getRowData().stream().sorted(rowComparator).collect(Collectors.toList());
+		List<Line> sortedRowData = data.getRowData().stream().
+			sorted(rowComparator).
+			collect(Collectors.toList());
 		return ChannelFileData.create(sortedRowData, data.getTitles(), data.getComments());
 	}
 
-	private int compareLines(String s1, String s2)
+	private int compareLines(Line s1, Line s2)
 	{
-		String[] split2 = StringUtils.splitBySpaces(s2);
+		String[] split2 = StringUtils.splitBySpaces(s2.getData());
 
 		Iterator<String> split2Iterator = Arrays.stream(split2).iterator();
-		Stream<Double> comparisons = StringUtils.spaceStream(s1).
+		Stream<Double> comparisons = StringUtils.spaceStream(s1.getData()).
 			limit(numIndependentChannels).
 			map(val -> Double.parseDouble(val) - Double.parseDouble(split2Iterator.next()));
 

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 /**
+ * Writes channel file data to a persistent storage.
  * Created by Gilad Ber on 4/5/14.
  */
 public class ChannelFileDataWriter
@@ -18,7 +19,7 @@ public class ChannelFileDataWriter
 		{
 			writeStream(writer, data.getComments().stream());
 			writeRow(writer, metaData.titleIndicator + StringUtils.join(data.getTitles()));
-			writeStream(writer, data.getRowData().stream());
+			writeStream(writer, data.getRowData().stream().map(Line::getData));
 		}
 		catch (Exception e)
 		{

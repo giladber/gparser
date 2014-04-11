@@ -1,6 +1,6 @@
 package com.gparser.raw.validation;
 
-import com.gparser.raw.ParsedFileData;
+import com.gparser.raw.ChannelFileData;
 
 /**
  * Basic interface for file data validation.
@@ -8,5 +8,5 @@ import com.gparser.raw.ParsedFileData;
  */
 public interface Validator
 {
-	public ValidationResult validate(ParsedFileData data);
+	public ValidationResult validate(ChannelFileData data);
 }
