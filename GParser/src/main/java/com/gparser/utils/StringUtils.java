@@ -1,8 +1,9 @@
 package com.gparser.utils;
 
-import com.gparser.raw.Line;
+import com.gparser.parsing.Line;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,5 +40,34 @@ public final class StringUtils
 		stream.forEachOrdered(val -> builder.append(val.toString()).append(separator));
 
 		return builder.toString();
+	}
+
+	public static List<String> product(Collection<String> a, Collection<String> b)
+	{
+		return a.stream().
+			sequential().
+			flatMap(elem -> b.stream().map(elem2 -> elem + " " + elem2)).
+			collect(Collectors.toList());
+	}
+
+	public static boolean compareRowData(String line1, String line2, int numParams)
+	{
+		String[] split1 = StringUtils.splitBySpaces(line1);
+		String[] split2 = StringUtils.splitBySpaces(line2);
+
+		if ((split1.length < numParams || split2.length < numParams) && split1.length != split2.length)
+		{
+			return false;
+		}
+
+		for (int i = 0; i < numParams; i++)
+		{
+			if (Double.parseDouble(split1[i]) != Double.parseDouble(split2[i]))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
