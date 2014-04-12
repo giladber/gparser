@@ -1,7 +1,8 @@
 package com.gparser.exec;
 
 import com.gparser.actions.ChannelAction;
-import com.gparser.actions.KHCompleteAction;
+import com.gparser.actions.CompleteAction;
+import com.gparser.actions.SortAction;
 import com.gparser.files.ChannelFileDataWriter;
 import com.gparser.parsing.BasicRawParser;
 import com.gparser.parsing.ParserMetaData;
@@ -9,8 +10,11 @@ import com.gparser.validation.Validator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Main entry method for performing any parsing plans.
@@ -38,7 +42,16 @@ public class GParserMain
 		long s1 = System.nanoTime();
 		System.out.println("Time to parse: " + nano2ms(s1 - s) + "ms");
 
-		new GParserExecutor(parser, Collections.<Validator>emptyList(), Arrays.<ChannelAction>asList(new KHCompleteAction()), new ChannelFileDataWriter()).
+		List<ChannelAction> actions = new ArrayList<>();
+		actions.add(new SortAction(3, true));
+
+		List<ChannelAction> completeActions = IntStream.range(20, 30).
+			mapToObj(x -> new CompleteAction(1, x)).
+			collect(Collectors.toList());
+
+		actions.addAll(completeActions);
+
+		new GParserExecutor(parser, Collections.<Validator>emptyList(), actions, new ChannelFileDataWriter()).
 			execute(new File(args[0]), new File(args[3]));
 
 		long s2 = System.nanoTime();
