@@ -1,6 +1,7 @@
 package com.gparser.validation;
 
 /**
+ * This class defined the model for results of a validation test.
  * Created by Gilad Ber on 4/5/14.
  */
 public class ValidationResult

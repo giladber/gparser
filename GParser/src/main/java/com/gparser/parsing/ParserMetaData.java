@@ -1,6 +1,7 @@
 package com.gparser.parsing;
 
 /**
+ * Meta data for parsing operations.
  * Created by Gilad Ber on 4/4/14.
  */
 public class ParserMetaData

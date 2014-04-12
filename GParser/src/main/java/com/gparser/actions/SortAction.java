@@ -24,7 +24,7 @@ public class SortAction implements ChannelAction
 	}
 
 	@Override
-	public ChannelFileData perform(ChannelFileData data)
+	public ChannelFileData apply(ChannelFileData data)
 	{
 		final Comparator<Line> rowComparator = this::compareLines;
 

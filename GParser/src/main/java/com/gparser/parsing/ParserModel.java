@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Basic model for a string parser.
  * Created by Gilad Ber on 4/4/14.
  */
 public class ParserModel

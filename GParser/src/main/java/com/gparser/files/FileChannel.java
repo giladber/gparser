@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A single channel from a file channel.
  * Created by Gilad Ber on 4/4/14.
  */
 public class FileChannel

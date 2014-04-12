@@ -23,7 +23,7 @@ public class FilterAction implements ChannelAction
 	}
 
 	@Override
-	public ChannelFileData perform(ChannelFileData data)
+	public ChannelFileData apply(ChannelFileData data)
 	{
 		System.out.println("raw data: " + data.getRowData());
 		List<Line> filtered = data.getRowData().

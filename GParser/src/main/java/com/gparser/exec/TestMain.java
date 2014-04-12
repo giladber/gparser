@@ -1,4 +1,4 @@
-package com.gparser.main;
+package com.gparser.exec;
 
 import com.gparser.actions.KHCompleteAction;
 import com.gparser.files.ChannelFileData;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
  * Main!
  * Created by Gilad Ber on 4/4/14.
  */
-public class RawParserMain
+public class TestMain
 {
 
 	//	public static final int INDEPENDENT_CHANNELS_NUM = 2;
@@ -25,7 +25,7 @@ public class RawParserMain
 	{
 		if (args.length < 4)
 		{
-			System.out.println("Usage: RawParserMain.java <input_file_name> <comment_indicator> <title_indicator> <output_file>");
+			System.out.println("Usage: TestMain.java <input_file_name> <comment_indicator> <title_indicator> <output_file>");
 			return;
 		}
 
@@ -40,7 +40,7 @@ public class RawParserMain
 
 		ChannelFileData cfd = ChannelFileData.create(data.getDataLines(), data.getTitles(), data.getCommentedLines());
 		System.out.println(cfd);
-		ChannelFileData finalData = new KHCompleteAction().perform(cfd);
+		ChannelFileData finalData = new KHCompleteAction().apply(cfd);
 		System.out.println(finalData);
 
 		new ChannelFileDataWriter().write(metaData, finalData, args[3]);

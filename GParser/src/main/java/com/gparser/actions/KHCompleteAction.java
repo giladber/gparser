@@ -22,7 +22,7 @@ public class KHCompleteAction implements ChannelAction
 	private final CartesianProductValidator cartesianProductValidator = new CartesianProductValidator(3);
 
 	@Override
-	public ChannelFileData perform(ChannelFileData data)
+	public ChannelFileData apply(ChannelFileData data)
 	{
 		ValidationResult duplicateLinesResult = duplicateLinesValidator.validate(data);
 		if (!duplicateLinesResult.isSucceeded())
@@ -37,12 +37,12 @@ public class KHCompleteAction implements ChannelAction
 		}
 
 		return sortAction.
-			perform(firstCompleteAction.
-				perform(firstCompleteZeroAction.
-					perform(secondCompleteNeg.
-						perform(secondCompletePos.
-							perform(thirdCompletePos.
-								perform(thirdCompleteNeg.
-									perform(data)))))));
+			apply(firstCompleteAction.
+				apply(firstCompleteZeroAction.
+					apply(secondCompleteNeg.
+						apply(secondCompletePos.
+							apply(thirdCompletePos.
+								apply(thirdCompleteNeg.
+									apply(data)))))));
 	}
 }

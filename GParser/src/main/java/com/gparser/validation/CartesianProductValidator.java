@@ -6,7 +6,6 @@ import com.gparser.parsing.Line;
 import com.gparser.parsing.LineFactory;
 import com.gparser.utils.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +40,7 @@ public class CartesianProductValidator implements Validator
 			return new ValidationResult(true, "empty data");
 		}
 
-		ChannelFileData sorted = new SortAction(numIndependentChannels, true).perform(data);
+		ChannelFileData sorted = new SortAction(numIndependentChannels, true).apply(data);
 		DuplicateLinesValidator duplicateLinesValidator = new DuplicateLinesValidator(numIndependentChannels);
 		ValidationResult duplicateValidationResult = duplicateLinesValidator.validate(sorted);
 		if (!duplicateValidationResult.isSucceeded())
@@ -86,9 +85,8 @@ public class CartesianProductValidator implements Validator
 
 	private List<List<String>> getIndependentChannelsDataSorted(ChannelFileData sorted)
 	{
-		List<List<String>> independentChannelsData = new ArrayList<>();
 
-		sorted.getChannels().stream().
+		return sorted.getChannels().stream().
 			sequential().
 			limit(numIndependentChannels).
 			map(ch -> new HashSet<String>(ch.getData())). //<String> is necessary because type inference is not good enough :(
@@ -97,9 +95,7 @@ public class CartesianProductValidator implements Validator
 				doubleList.sort((x, y) -> (int) (x - y));
 				return doubleList.stream().sequential().map(d -> Double.toString(d)).collect(Collectors.toList());
 			}).
-			forEach(independentChannelsData::add);
-
-		return independentChannelsData;
+			collect(Collectors.toList());
 	}
 
 	private static final class ComparedLine

@@ -22,26 +22,27 @@ public class BasicRawParser implements StringParser
 	@Override
 	/**
 	 * Parses the data from the input stream into a ParsedFileData object.
-	 * Since this method accepts any stream and does not perform any intermediate actions on the input stream,
+	 * Since this method accepts any stream and does not apply any intermediate actions on the input stream,
 	 * it is the caller's responsibility to make sure this is not an infinite stream, otherwise the method will
 	 * never terminate.
 	 */
 	public ParsedFileData parse(Stream<Line> linesStream, String sourceName) throws IOException
 	{
 		linesStream.
+			map(line -> new Line(line.getIndex(), line.getData().trim())).
 			forEachOrdered(line -> {
-				String trimmed = line.getData().trim();
-				if (trimmed.startsWith(metaData.commentIndicator))
+				String data = line.getData();
+				if (data.startsWith(metaData.commentIndicator))
 				{
-					model.addComment(trimmed);
+					model.addComment(data);
 				}
-				else if (trimmed.startsWith(metaData.titleIndicator))
+				else if (data.startsWith(metaData.titleIndicator))
 				{
-					model.setTitleLine(trimmed.replace(metaData.titleIndicator, ""));
+					model.setTitleLine(data.replace(metaData.titleIndicator, ""));
 				}
 				else
 				{
-					model.addDataLine(new Line(line.getIndex(), trimmed));
+					model.addDataLine(new Line(line.getIndex(), data));
 				}
 			});
 		return builder.build(model, sourceName);

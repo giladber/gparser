@@ -16,16 +16,16 @@ import java.util.stream.Collectors;
 public class CompleteAction implements ChannelAction
 {
 	private final int channelNumToComplete;
-	private final long completeValue;
+	private final double completeValue;
 
-	public CompleteAction(int channelNumToComplete, long completeValue)
+	public CompleteAction(int channelNumToComplete, double completeValue)
 	{
 		this.channelNumToComplete = channelNumToComplete - 1;
 		this.completeValue = completeValue;
 	}
 
 	@Override
-	public ChannelFileData perform(ChannelFileData data)
+	public ChannelFileData apply(ChannelFileData data)
 	{
 		List<Line> rows = data.getRowData();
 
@@ -35,14 +35,14 @@ public class CompleteAction implements ChannelAction
 			map(s -> Double.parseDouble(StringUtils.splitBySpaces(s)[channelNumToComplete])).
 			max((d1, d2) -> (int) (Math.abs(completeValue - d2) - Math.abs(completeValue - d1)));
 
-		if (closestValue.get() == (double) completeValue)
+		if (closestValue.get() == completeValue)
 		{
 			return data;
 		}
 
 		List<Line> completedRows = rows.stream().
 			filter(row -> Double.parseDouble(StringUtils.splitBySpaces(row.getData())[channelNumToComplete]) == closestValue.get()).
-			map(row -> changeLineParameter(row, channelNumToComplete, Long.toString(completeValue))).
+			map(row -> changeLineParameter(row, channelNumToComplete, Double.toString(completeValue))).
 			collect(Collectors.toList());
 
 		completedRows.addAll(rows);
@@ -57,6 +57,6 @@ public class CompleteAction implements ChannelAction
 			split[numParameter] = newValue;
 		}
 
-		return new Line(line.getIndex(), Arrays.stream(split).collect(Collectors.joining(" ")));
+		return new Line(line.getIndex(), StringUtils.join(Arrays.asList(split)));
 	}
 }
