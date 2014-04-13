@@ -27,13 +27,10 @@ public class FilterAction implements ChannelAction
 	@Override
 	public ChannelFileData apply(ChannelFileData data)
 	{
-		System.out.println("raw data: " + data.getRowData());
 		List<Line> filtered = data.getRowData().
 			stream().
 			filter(row -> filter.test(StringUtils.splitBySpaces(row.getData())[numChannelToFilter - 1])).
 			collect(Collectors.toList());
-
-		System.out.println(filtered);
 
 		return ChannelFileData.create(filtered, data.getTitles(), data.getComments());
 	}

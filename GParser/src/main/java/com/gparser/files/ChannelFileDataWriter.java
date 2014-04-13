@@ -35,6 +35,12 @@ public class ChannelFileDataWriter
 			forEachOrdered(obj -> writeRow(writer, obj.toString()));
 	}
 
+	/**
+	 * I admit this is a pretty bad way to write, but I'm too lazy to change it.
+	 *
+	 * @param writer BufferedWriter to write with.
+	 * @param row    String to write to file.
+	 */
 	private void writeRow(BufferedWriter writer, String row)
 	{
 		try

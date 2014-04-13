@@ -4,7 +4,10 @@ import com.gparser.files.ChannelFileData;
 import com.gparser.parsing.Line;
 import com.gparser.utils.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,11 +29,10 @@ public class SortAction implements ChannelAction
 	@Override
 	public ChannelFileData apply(ChannelFileData data)
 	{
-		final Comparator<Line> rowComparator = this::compareLines;
-
 		List<Line> sortedRowData = data.getRowData().stream().
-			sorted(rowComparator).
+			sorted(this::compareLines).
 			collect(Collectors.toList());
+
 		return ChannelFileData.create(sortedRowData, data.getTitles(), data.getComments());
 	}
 
@@ -45,8 +47,12 @@ public class SortAction implements ChannelAction
 
 		int result = 0;
 		int sortTypeFactor = ascending ? 1 : -1;
-		Optional<Double> intermediateResult = comparisons.filter(val -> val != 0).map(val -> sortTypeFactor * val).findFirst();
-		result = intermediateResult.isPresent() ? (int) ((double) intermediateResult.get()) : result;
+		Optional<Double> intermediateResult = comparisons.
+			filter(val -> val != 0).
+			map(val -> sortTypeFactor * val).
+			findFirst();
+
+		result = intermediateResult.map(res -> (int) res.doubleValue()).orElse(result);
 
 		return result;
 	}

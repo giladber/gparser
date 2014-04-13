@@ -34,10 +34,11 @@ public class KHCompleteAction implements ChannelAction
 	private ChannelAction createComposedCompleteAction(KHCompleteActionInput input)
 	{
 		final AtomicInteger counter = new AtomicInteger(1);
-		List<ChannelAction> completeActions = Arrays.stream(input.getChannelBounds()).
+		List<ChannelAction> completeActions = Arrays.
+			stream(input.getChannelBounds()).
 			sequential().
 			flatMap(arr -> {
-				CompleteAction action1 = new CompleteAction(counter.getAndIncrement(), arr[0]);
+				CompleteAction action1 = new CompleteAction(counter.get(), arr[0]);
 				CompleteAction action2 = new CompleteAction(counter.getAndIncrement(), arr[1]);
 				return Arrays.stream(new CompleteAction[]{action1, action2});
 			}).

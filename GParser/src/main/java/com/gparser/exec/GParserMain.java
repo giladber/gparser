@@ -1,20 +1,14 @@
 package com.gparser.exec;
 
-import com.gparser.actions.ChannelAction;
-import com.gparser.actions.CompleteAction;
-import com.gparser.actions.SortAction;
+import com.gparser.actions.KHCompleteAction;
+import com.gparser.actions.KHCompleteActionInput;
 import com.gparser.files.ChannelFileDataWriter;
 import com.gparser.parsing.BasicRawParser;
 import com.gparser.parsing.ParserMetaData;
-import com.gparser.validation.Validator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Main entry method for performing any parsing plans.
@@ -31,7 +25,7 @@ public class GParserMain
 	{
 		if (args.length < 4)
 		{
-			System.out.println("Usage: GParserMain.java <input_file_name> <comment_indicator> <title_indicator> <output_file>");
+			System.out.println("Usage: GParserMain.java <input_file_name> <comment_indicator> <title_indicator> <output_file> [mode:1,2]");
 			return;
 		}
 
@@ -42,16 +36,12 @@ public class GParserMain
 		long s1 = System.nanoTime();
 		System.out.println("Time to parse: " + nano2ms(s1 - s) + "ms");
 
-		List<ChannelAction> actions = new ArrayList<>();
-		actions.add(new SortAction(3, true));
+		double[][] delBounds = new double[][]{{0, 20}, {-180, 180}, {-180, 180}};
+		double[][] xcgBounds = new double[][]{{0, 20}, {-180, 180}, {0, 100}};
+		double[][] completionValues = args.length >= 5 && args[4].equals("2") ? xcgBounds : delBounds;
+		KHCompleteAction khAction = new KHCompleteAction(new KHCompleteActionInput(3, completionValues));
 
-		List<ChannelAction> completeActions = IntStream.range(20, 30).
-			mapToObj(x -> new CompleteAction(1, x)).
-			collect(Collectors.toList());
-
-		actions.addAll(completeActions);
-
-		new GParserExecutor(parser, Collections.<Validator>emptyList(), actions, new ChannelFileDataWriter()).
+		new GParserExecutor(parser, Collections.emptyList(), Collections.singletonList(khAction), new ChannelFileDataWriter()).
 			execute(new File(args[0]), new File(args[3]));
 
 		long s2 = System.nanoTime();
