@@ -1,4 +1,4 @@
-package com.gparser.tests.parsing;
+package com.gparser.tests.jmh.parsing;
 
 import com.gparser.parsing.*;
 import com.gparser.utils.FileUtils;

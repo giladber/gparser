@@ -17,9 +17,9 @@ public class SortAction implements ChannelAction
 	private final int numIndependentChannels;
 	private final boolean ascending;
 
-	public SortAction(int numUndependentChannels, boolean ascending)
+	public SortAction(int numIndependentChannels, boolean ascending)
 	{
-		this.numIndependentChannels = numUndependentChannels;
+		this.numIndependentChannels = numIndependentChannels;
 		this.ascending = ascending;
 	}
 

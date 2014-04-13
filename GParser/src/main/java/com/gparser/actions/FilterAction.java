@@ -5,18 +5,20 @@ import com.gparser.parsing.Line;
 import com.gparser.utils.StringUtils;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ * An action to filter elements of a channeled file's data based on an input predicate.
+ * The filtering will be done only on the input channel (identified by index).
  * Created by Gilad Ber on 4/5/14.
  */
 public class FilterAction implements ChannelAction
 {
 	private final int numChannelToFilter;
-	private final Function<String, Boolean> filter;
+	private final Predicate<? super String> filter;
 
-	public FilterAction(int numChannelToFilter, Function<String, Boolean> filter)
+	public FilterAction(int numChannelToFilter, Predicate<? super String> filter)
 	{
 		this.numChannelToFilter = numChannelToFilter;
 		this.filter = filter;
@@ -28,7 +30,7 @@ public class FilterAction implements ChannelAction
 		System.out.println("raw data: " + data.getRowData());
 		List<Line> filtered = data.getRowData().
 			stream().
-			filter(row -> filter.apply(StringUtils.splitBySpaces(row.getData())[numChannelToFilter - 1])).
+			filter(row -> filter.test(StringUtils.splitBySpaces(row.getData())[numChannelToFilter - 1])).
 			collect(Collectors.toList());
 
 		System.out.println(filtered);

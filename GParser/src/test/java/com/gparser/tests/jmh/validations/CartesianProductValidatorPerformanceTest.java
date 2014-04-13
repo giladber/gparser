@@ -1,39 +1,41 @@
-package com.gparser.tests.actions;
+package com.gparser.tests.jmh.validations;
 
-import com.gparser.actions.CompleteAction;
 import com.gparser.files.ChannelFileData;
 import com.gparser.tests.mock.ChannelFileDataMockFactory;
+import com.gparser.validation.CartesianProductValidator;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
 
 /**
- * Performance test for complete channel action.
+ * Performance test for Cartesian product validation.
  * Created by Gilad Ber on 4/12/14.
  */
 @State(Scope.Thread)
 @SuppressWarnings("unused")
-public class CompleteActionPerformanceTest
+public class CartesianProductValidatorPerformanceTest
 {
 	public static final ChannelFileDataMockFactory CFD_FACTORY = new ChannelFileDataMockFactory();
 	public static final String TITLE_INDICATOR = "%%";
 	public static final String COMMENT_INDICATOR = "%#";
+	private CartesianProductValidator validator;
 	private ChannelFileData smallData;
 	private ChannelFileData verySmallData;
 	private ChannelFileData mediumData;
 	private ChannelFileData largeData;
-	private CompleteAction action;
+	private ChannelFileData largeNonCartesianData;
 
 	@Setup(Level.Trial)
 	public void init()
 	{
+		this.validator = new CartesianProductValidator(3);
 		try
 		{
 			this.smallData = CFD_FACTORY.build("C:/parser/result_small.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
 			this.verySmallData = CFD_FACTORY.build("C:/parser/result_verysmall.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
 			this.mediumData = CFD_FACTORY.build("C:/parser/result_medium.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
 			this.largeData = CFD_FACTORY.build("C:/parser/result_large.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
-			this.action = new CompleteAction(3, -33);
+			this.largeNonCartesianData = CFD_FACTORY.build("C:/parser/result_large_non_cartesian.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
 		}
 		catch (IOException e)
 		{
@@ -42,26 +44,32 @@ public class CompleteActionPerformanceTest
 	}
 
 	@GenerateMicroBenchmark
-	public void testCompleteSmallData()
+	public void validateSmallCartesianData()
 	{
-		action.apply(smallData);
+		validator.validate(smallData);
 	}
 
 	@GenerateMicroBenchmark
-	public void testCompleteVerySmallData()
+	public void validateVerySmallCartesianData()
 	{
-		action.apply(verySmallData);
+		validator.validate(verySmallData);
 	}
 
 	@GenerateMicroBenchmark
-	public void testCompleteMediumData()
+	public void validateMediumCartesianData()
 	{
-		action.apply(mediumData);
+		validator.validate(mediumData);
 	}
 
 	@GenerateMicroBenchmark
-	public void testCompleteLargeData()
+	public void validateLargeCartesianData()
 	{
-		action.apply(largeData);
+		validator.validate(largeData);
+	}
+
+	@GenerateMicroBenchmark
+	public void validateLargeNonCartesianData()
+	{
+		validator.validate(largeNonCartesianData);
 	}
 }

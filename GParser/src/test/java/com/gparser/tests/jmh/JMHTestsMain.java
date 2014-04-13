@@ -1,4 +1,4 @@
-package com.gparser.tests;
+package com.gparser.tests.jmh;
 
 import org.openjdk.jmh.logic.results.Result;
 import org.openjdk.jmh.logic.results.RunResult;
@@ -38,9 +38,9 @@ public class JMHTestsMain
 			forEach(JMHTestsMain::printResult);
 	}
 
-	private static <T extends Result<T>> void printResult(Result<T> result)
+	private static void printResult(Result result)
 	{
-		System.out.println("Benchmark score: " + result.getScore() +
+		System.out.println("Benchmark " + result.getLabel() + " score: " + result.getScore() +
 			" " + result.getScoreUnit() + " over " + result.getStatistics().getN() + " iterations");
 	}
 }

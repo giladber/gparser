@@ -1,8 +1,6 @@
 package com.gparser.exec;
 
-import com.gparser.actions.KHCompleteAction;
 import com.gparser.files.ChannelFileData;
-import com.gparser.files.ChannelFileDataWriter;
 import com.gparser.parsing.BasicRawParser;
 import com.gparser.parsing.LineFactory;
 import com.gparser.parsing.ParsedFileData;
@@ -40,9 +38,9 @@ public class TestMain
 
 		ChannelFileData cfd = ChannelFileData.create(data.getDataLines(), data.getTitles(), data.getCommentedLines());
 		System.out.println(cfd);
-		ChannelFileData finalData = new KHCompleteAction().apply(cfd);
-		System.out.println(finalData);
-
-		new ChannelFileDataWriter().write(metaData, finalData, args[3]);
+		//		ChannelFileData finalData = new KHCompleteAction().apply(cfd);
+		//		System.out.println(finalData);
+		//
+		//		new ChannelFileDataWriter().write(metaData, finalData, args[3]);
 	}
 }

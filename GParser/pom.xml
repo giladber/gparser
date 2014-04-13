@@ -41,6 +41,18 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <!--<skipTests>true</skipTests>-->
+                    <excludes>
+                        <exclude>**/*Performance*.java</exclude>
+                        <exclude>**/jmh/*.*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.0</version>
                 <executions>

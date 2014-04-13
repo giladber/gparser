@@ -18,6 +18,9 @@ import java.util.Optional;
 
 /**
  * Executes general gparser plans.
+ * <p>
+ * It should be noted that the plans are executed in the exact order they are given as input,
+ * with validations of course running before the actions.
  * Created by Gilad Ber on 4/12/14.
  */
 public class GParserExecutor
