@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 public class ParsingPerformanceTest
 {
 
+	public static final String TEST_DATA = "test data";
 	private StringParser parser;
 	private File source;
 	private Stream<Line> lineStream;
@@ -34,6 +35,9 @@ public class ParsingPerformanceTest
 	}
 
 	@Setup(Level.Invocation)
+	/**
+	 * We have to setup the stream for each invocation since a stream may only be consumed once.
+	 */
 	public void initStream()
 	{
 		try
@@ -49,6 +53,6 @@ public class ParsingPerformanceTest
 	@GenerateMicroBenchmark
 	public ParsedFileData parse() throws IOException
 	{
-		return parser.parse(this.lineStream, "test data");
+		return parser.parse(this.lineStream, TEST_DATA);
 	}
 }

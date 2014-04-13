@@ -2,7 +2,6 @@ package com.gparser.tests;
 
 import org.openjdk.jmh.logic.results.Result;
 import org.openjdk.jmh.logic.results.RunResult;
-import org.openjdk.jmh.output.OutputFormatType;
 import org.openjdk.jmh.runner.BenchmarkRecord;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -25,14 +24,12 @@ public class JMHTestsMain
 		Options opts = new OptionsBuilder().
 			include(".*").
 			forks(1).
-			syncIterations(false).
 			shouldDoGC(true).
 			warmupTime(TimeValue.seconds(10)).
 			measurementTime(TimeValue.seconds(15)).
 			warmupIterations(1).
 			measurementIterations(3).
-			jvmArgs("-client -Xms64m -Xmx1024m").
-			outputFormat(OutputFormatType.TextReport).
+			jvmArgs("-server", "-Xmx1024m", "-Xms256m").
 			build();
 
 		Map<BenchmarkRecord, RunResult> records = new Runner(opts).run();
