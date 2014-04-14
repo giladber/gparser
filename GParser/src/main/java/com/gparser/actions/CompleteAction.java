@@ -3,6 +3,8 @@ package com.gparser.actions;
 import com.gparser.files.ChannelFileData;
 import com.gparser.parsing.Line;
 import com.gparser.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +19,7 @@ public class CompleteAction implements ChannelAction
 {
 	private final int channelNumToComplete;
 	private final double completeValue;
+	private static final Logger logger = LoggerFactory.getLogger(CompleteAction.class);
 
 	public CompleteAction(int channelNumToComplete, double completeValue)
 	{
@@ -46,7 +49,9 @@ public class CompleteAction implements ChannelAction
 			collect(Collectors.toList());
 
 		completedRows.addAll(rows);
-		return ChannelFileData.create(completedRows, data.getTitles(), data.getComments());
+		ChannelFileData result = ChannelFileData.create(completedRows, data.getTitles(), data.getComments());
+		logger.info("Applied complete action for channel {} with completion value {}", channelNumToComplete + 1, completeValue);
+		return result;
 	}
 
 	private Line changeLineParameter(Line line, int numParameter, String newValue)

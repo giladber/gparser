@@ -3,6 +3,8 @@ package com.gparser.actions;
 import com.gparser.files.ChannelFileData;
 import com.gparser.parsing.Line;
 import com.gparser.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,6 +19,7 @@ public class FilterAction implements ChannelAction
 {
 	private final int numChannelToFilter;
 	private final Predicate<? super String> filter;
+	private static final Logger logger = LoggerFactory.getLogger(FilterAction.class);
 
 	public FilterAction(int numChannelToFilter, Predicate<? super String> filter)
 	{
@@ -32,6 +35,8 @@ public class FilterAction implements ChannelAction
 			filter(row -> filter.test(StringUtils.splitBySpaces(row.getData())[numChannelToFilter - 1])).
 			collect(Collectors.toList());
 
-		return ChannelFileData.create(filtered, data.getTitles(), data.getComments());
+		ChannelFileData result = ChannelFileData.create(filtered, data.getTitles(), data.getComments());
+		logger.info("Applied filter action on channel #{}", numChannelToFilter);
+		return result;
 	}
 }

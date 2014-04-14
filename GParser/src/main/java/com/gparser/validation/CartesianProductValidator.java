@@ -5,6 +5,8 @@ import com.gparser.files.ChannelFileData;
 import com.gparser.parsing.Line;
 import com.gparser.parsing.LineFactory;
 import com.gparser.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,6 +26,7 @@ public class CartesianProductValidator implements Validator
 	private static final String NOT_CARTESIAN_PRODUCT_MSG = "Not a cartesian product: ";
 	private static final int MAX_BAD_LINES = 50;
 	private static final String EMPTY_LINE = "EMPTY";
+	private static final Logger logger = LoggerFactory.getLogger(CartesianProductValidator.class);
 
 	private final int numIndependentChannels;
 
@@ -37,6 +40,7 @@ public class CartesianProductValidator implements Validator
 	{
 		if (data.getRowData().size() == 0)
 		{
+			logger.info("Cartesian product validation successful: Empty input");
 			return new ValidationResult(true, "empty data");
 		}
 
@@ -45,14 +49,18 @@ public class CartesianProductValidator implements Validator
 		ValidationResult duplicateValidationResult = duplicateLinesValidator.validate(sorted);
 		if (!duplicateValidationResult.isSucceeded())
 		{
-			return new ValidationResult(false, NOT_CARTESIAN_PRODUCT_MSG + duplicateValidationResult.getMsg());
+			ValidationResult result = new ValidationResult(false, NOT_CARTESIAN_PRODUCT_MSG + duplicateValidationResult.getMsg());
+			logger.info("Cartesian product validation failed - input has duplicate lines");
+			return result;
 		}
 
 		//The nth element in this list is the set of all values for the nth channel in the input file.
 		List<List<String>> independentChannelsData = getIndependentChannelsDataSorted(sorted);
 		List<ComparedLine> badLines = getBadLines(sorted, independentChannelsData);
 
-		return getValidationResult(badLines);
+		ValidationResult validationResult = getValidationResult(badLines);
+		logger.info("Cartesian product validation result: {}", validationResult.isSucceeded() ? "success" : "failure");
+		return validationResult;
 	}
 
 	private ValidationResult getValidationResult(List<ComparedLine> badLines)

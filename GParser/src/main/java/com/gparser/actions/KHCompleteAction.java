@@ -1,9 +1,8 @@
 package com.gparser.actions;
 
 import com.gparser.files.ChannelFileData;
-import com.gparser.validation.CartesianProductValidator;
-import com.gparser.validation.DuplicateLinesValidator;
-import com.gparser.validation.ValidationResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,18 +16,15 @@ import java.util.stream.Collectors;
 public class KHCompleteAction implements ChannelAction
 {
 	private final SortAction sortAction;
-	private final DuplicateLinesValidator duplicateLinesValidator;
-	private final CartesianProductValidator cartesianProductValidator;
 	private final ChannelAction composedCompleteAction;
+	private static final Logger logger = LoggerFactory.getLogger(KHCompleteAction.class);
 
 	public KHCompleteAction(KHCompleteActionInput input)
 	{
 		int numIndependentChannels = input.getNumIndependentChannels();
-		this.cartesianProductValidator = new CartesianProductValidator(numIndependentChannels);
-		this.duplicateLinesValidator = new DuplicateLinesValidator(numIndependentChannels);
 		this.sortAction = new SortAction(numIndependentChannels, true);
-
 		this.composedCompleteAction = createComposedCompleteAction(input);
+		logger.info("Successfully created KHCompleteAction composed of sort action and {} complete actions", input.getNumIndependentChannels() * 2);
 	}
 
 	private ChannelAction createComposedCompleteAction(KHCompleteActionInput input)
@@ -55,18 +51,8 @@ public class KHCompleteAction implements ChannelAction
 	@Override
 	public ChannelFileData apply(ChannelFileData data)
 	{
-		ValidationResult duplicateLinesResult = duplicateLinesValidator.validate(data);
-		if (!duplicateLinesResult.isSucceeded())
-		{
-			throw new IllegalArgumentException(duplicateLinesResult.getMsg());
-		}
-
-		ValidationResult cartesianProductResult = cartesianProductValidator.validate(data);
-		if (!cartesianProductResult.isSucceeded())
-		{
-			throw new IllegalArgumentException(cartesianProductResult.getMsg());
-		}
-
-		return sortAction.apply(composedCompleteAction.apply(data));
+		ChannelFileData result = sortAction.apply(composedCompleteAction.apply(data));
+		logger.info("Applied KHCompleteAction to result");
+		return result;
 	}
 }

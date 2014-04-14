@@ -1,5 +1,8 @@
 package com.gparser.parsing;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A factory class for creating Lines.
  * <p>
@@ -10,9 +13,11 @@ package com.gparser.parsing;
 public class LineFactory
 {
 	private long index = 1;
+	private static final Logger logger = LoggerFactory.getLogger(LineFactory.class);
 
 	public Line next(String line)
 	{
+		logger.trace("Created line #{}", index + 1);
 		return new Line(index++, line);
 	}
 }

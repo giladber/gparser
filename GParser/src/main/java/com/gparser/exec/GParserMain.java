@@ -5,6 +5,9 @@ import com.gparser.actions.KHCompleteActionInput;
 import com.gparser.files.ChannelFileDataWriter;
 import com.gparser.parsing.BasicRawParser;
 import com.gparser.parsing.ParserMetaData;
+import com.gparser.validation.CartesianProductValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +19,9 @@ import java.util.Collections;
  */
 public class GParserMain
 {
+
+	private static final Logger logger = LoggerFactory.getLogger(GParserMain.class);
+
 	public static void main(String[] args) throws IOException
 	{
 		execute(args);
@@ -29,28 +35,24 @@ public class GParserMain
 			return;
 		}
 
-		long s = System.nanoTime();
 		ParserMetaData metaData = new ParserMetaData.Builder().commentIndicator(args[1]).titleIndicator(args[2]).build();
 		BasicRawParser parser = new BasicRawParser(metaData);
-
-		long s1 = System.nanoTime();
-		System.out.println("Time to parse: " + nano2ms(s1 - s) + "ms");
 
 		double[][] delBounds = new double[][]{{0, 20}, {-180, 180}, {-180, 180}};
 		double[][] xcgBounds = new double[][]{{0, 20}, {-180, 180}, {0, 100}};
 		double[][] completionValues = args.length >= 5 && args[4].equals("2") ? xcgBounds : delBounds;
 		KHCompleteAction khAction = new KHCompleteAction(new KHCompleteActionInput(3, completionValues));
+		CartesianProductValidator cartesianProductValidator = new CartesianProductValidator(3);
 
-		new GParserExecutor(parser, Collections.emptyList(), Collections.singletonList(khAction), new ChannelFileDataWriter()).
-			execute(new File(args[0]), new File(args[3]));
-
-		long s2 = System.nanoTime();
-
-		System.out.println("Time to execute: " + nano2ms(s2 - s1) + "ms");
+		try
+		{
+			new GParserExecutor(parser, Collections.singletonList(cartesianProductValidator), Collections.singletonList(khAction), new ChannelFileDataWriter()).
+				execute(new File(args[0]), new File(args[3]));
+		}
+		catch (Exception e)
+		{
+			logger.error("Parsing execution failed: {}", e);
+		}
 	}
 
-	private static double nano2ms(double nano)
-	{
-		return nano / 1E6;
-	}
 }

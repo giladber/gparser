@@ -3,6 +3,8 @@ package com.gparser.actions;
 import com.gparser.files.ChannelFileData;
 import com.gparser.parsing.Line;
 import com.gparser.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -20,6 +22,8 @@ public class SortAction implements ChannelAction
 	private final int numIndependentChannels;
 	private final boolean ascending;
 
+	private static final Logger logger = LoggerFactory.getLogger(SortAction.class);
+
 	public SortAction(int numIndependentChannels, boolean ascending)
 	{
 		this.numIndependentChannels = numIndependentChannels;
@@ -33,7 +37,9 @@ public class SortAction implements ChannelAction
 			sorted(this::compareLines).
 			collect(Collectors.toList());
 
-		return ChannelFileData.create(sortedRowData, data.getTitles(), data.getComments());
+		ChannelFileData channelFileData = ChannelFileData.create(sortedRowData, data.getTitles(), data.getComments());
+		logger.info("Finished applying sort action to input");
+		return channelFileData;
 	}
 
 	private int compareLines(Line s1, Line s2)

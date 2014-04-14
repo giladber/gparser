@@ -3,6 +3,8 @@ package com.gparser.validation;
 import com.gparser.files.ChannelFileData;
 import com.gparser.parsing.Line;
 import com.gparser.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -18,8 +20,9 @@ import java.util.stream.Stream;
  */
 public class DuplicateLinesValidator implements Validator
 {
-	public static final int MAX_FAILED_VALIDATIONS = 50;
-	public static final String VALIDATION_OK_MSG = "success";
+	private static final int MAX_FAILED_VALIDATIONS = 50;
+	private static final String VALIDATION_OK_MSG = "success";
+	private static final Logger logger = LoggerFactory.getLogger(DuplicateLinesValidator.class);
 
 	private final int numIndependentChannels;
 
@@ -49,7 +52,9 @@ public class DuplicateLinesValidator implements Validator
 			limit(MAX_FAILED_VALIDATIONS).
 			map(ValidationResult::getMsg);
 
-		return buildFinalResult(resultsStream);
+		ValidationResult result = buildFinalResult(resultsStream);
+		logger.info("Duplicate lines validation result: {}", result.isSucceeded() ? "success" : "failure");
+		return result;
 	}
 
 	private ValidationResult buildFinalResult(Stream<String> resultsStream)

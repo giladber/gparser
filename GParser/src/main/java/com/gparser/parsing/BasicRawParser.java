@@ -1,5 +1,9 @@
 package com.gparser.parsing;
 
+import com.gparser.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.stream.Stream;
 
@@ -12,6 +16,8 @@ public class BasicRawParser implements StringParser
 	private final ParserModel model;
 	private final ParserMetaData metaData;
 	private final ParsedFileDataBuilder builder = new ParsedFileDataBuilder();
+
+	private static final Logger logger = LoggerFactory.getLogger(BasicRawParser.class);
 
 	public BasicRawParser(ParserMetaData metaData)
 	{
@@ -45,6 +51,8 @@ public class BasicRawParser implements StringParser
 					model.addDataLine(new Line(line.getIndex(), data));
 				}
 			});
+
+		logger.info("Parsed file {} to memory. Result has {} commented lines, {} channels and {} data lines", sourceName, model.getCommentLines().size(), StringUtils.splitBySpaces(model.getTitleLine()).length, model.getData().size());
 		return builder.build(model, sourceName);
 	}
 }
