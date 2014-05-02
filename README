@@ -1,0 +1,2 @@
+GParser is a java 8-based project for parsing, validating and manipulating data of ASCII files which are formatted by channels,
+where the files consist of floating-point data.
