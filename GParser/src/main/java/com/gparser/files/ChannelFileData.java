@@ -3,10 +3,7 @@ package com.gparser.files;
 import com.gparser.parsing.Line;
 import com.gparser.utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +44,25 @@ public class ChannelFileData
 
 	public List<FileChannel> getChannels()
 	{
-		return channels;
+		return Collections.unmodifiableList(channels);
+	}
+
+	public void addChannel(FileChannel channel)
+	{
+		if (channel.getData().size() != this.rowData.size())
+		{
+			throw new IllegalArgumentException("Illegal channel size: must be " + rowData.size());
+		}
+
+		Iterator<String> channelIterator = channel.getData().iterator();
+		List<Line> newLines = rowData.stream().sequential().
+			map(line -> new Line(line.getIndex(), line.getData() + " " + channelIterator.next())).
+			collect(Collectors.toList());
+
+		rowData.clear();
+		rowData.addAll(newLines);
+		channels.add(channel);
+		titles.add(channel.getTitle());
 	}
 
 	public List<String> getComments()

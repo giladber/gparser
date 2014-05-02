@@ -48,17 +48,24 @@ public class SortAction implements ChannelAction
 
 		Iterator<String> split2Iterator = Arrays.stream(split2).iterator();
 		Stream<Double> comparisons = StringUtils.spaceStream(s1.getData()).
+			sequential().
 			limit(numIndependentChannels).
 			map(val -> Double.parseDouble(val) - Double.parseDouble(split2Iterator.next()));
 
 		int result = 0;
 		int sortTypeFactor = ascending ? 1 : -1;
-		Optional<Double> intermediateResult = comparisons.
+		Optional<Integer> intermediateResult = comparisons.
 			filter(val -> val != 0).
+			map(val -> val > 0 ? 1 : -1).
 			map(val -> sortTypeFactor * val).
 			findFirst();
 
-		result = intermediateResult.map(res -> (int) res.doubleValue()).orElse(result);
+		result = intermediateResult.orElse(result);
+
+		if (result == 0)
+		{
+			logger.warn("Result should not be 0! \nline1 = {} \nline2 = {}", s1, s2);
+		}
 
 		return result;
 	}

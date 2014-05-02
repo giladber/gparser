@@ -100,7 +100,7 @@ public class CartesianProductValidator implements Validator
 			map(ch -> new HashSet<String>(ch.getData())). //<String> is necessary because type inference is not good enough :(
 			map(set -> set.stream().map(Double::parseDouble).collect(Collectors.toList())).
 			map(doubleList -> {
-				doubleList.sort((x, y) -> (int) (x - y));
+				doubleList.sort((x, y) -> x - y > 0 ? 1 : -1);
 				return doubleList.stream().sequential().map(d -> Double.toString(d)).collect(Collectors.toList());
 			}).
 			collect(Collectors.toList());
