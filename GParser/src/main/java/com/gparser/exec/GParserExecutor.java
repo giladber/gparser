@@ -16,14 +16,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Executes general gparser plans.
- * <p>
  * It should be noted that the plans are executed in the exact order they are given as input,
- * with validations of course running before the actions.
+ * with validations running before the actions.
  * Created by Gilad Ber on 4/12/14.
  */
 public class GParserExecutor
@@ -71,12 +69,11 @@ public class GParserExecutor
 
 	private void validate(ChannelFileData base) throws IllegalArgumentException
 	{
-		Optional<ValidationResult> optionalResult = validators.parallelStream().
-			map(v -> v.validate(base)).
-			filter(vr -> !vr.isSucceeded()).
-			reduce((r1, r2) -> new ValidationResult(false, r1.getMsg() + "\n" + r2.getMsg()));
-
-		ValidationResult result = optionalResult.orElse(new ValidationResult(true, "All validations successful!"));
+		Validator validator = validators.stream().
+			reduce(Validator::compose).
+			orElseGet(Validator::empty);
+		
+		ValidationResult result = validator.validate(base);
 		if (!result.isSucceeded())
 		{
 			throw new IllegalArgumentException(result.getMsg());

@@ -15,6 +15,13 @@ public class ValidationResult
 		this.msg = msg;
 	}
 
+	public ValidationResult compose(ValidationResult other)
+	{
+		boolean success = this.succeeded && other.succeeded;
+		String msg = success ? "Validation succeeded" : "Validation failed: " + this.msg + ", " + other.msg;
+		return new ValidationResult(success, msg);
+	}
+
 	public boolean isSucceeded()
 	{
 		return succeeded;
@@ -23,5 +30,10 @@ public class ValidationResult
 	public String getMsg()
 	{
 		return msg;
+	}
+
+	public static ValidationResult emptySuccess()
+	{
+		return new ValidationResult(true, "Success");
 	}
 }
