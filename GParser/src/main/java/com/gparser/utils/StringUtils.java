@@ -42,12 +42,16 @@ public final class StringUtils
 
 	public static <T> String join(Stream<T> stream, String separator)
 	{
-		StringBuilder builder = new StringBuilder();
-		stream.forEachOrdered(val -> builder.append(val.toString()).append(separator));
-
-		return builder.toString();
+		return stream.map(val -> val.toString()).collect(Collectors.joining(separator));
 	}
 
+	/**
+	 * Returns a list of all possible ordered combinations of the elements of a and b, separated by spaces
+	 *
+	 * @param a collection of strings
+	 * @param b collections of strings
+	 * @return A list of strings each containing all possible concatenated elements from a and b, in order.
+	 */
 	public static List<String> product(Collection<String> a, Collection<String> b)
 	{
 		return a.stream().

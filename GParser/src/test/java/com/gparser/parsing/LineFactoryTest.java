@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
  * Test for LineFactory class.
  * Created by Gilad Ber on 5/12/14.
  */
-@SuppressWarnings("unused")
 public class LineFactoryTest
 {
 	private LineFactory factory;

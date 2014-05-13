@@ -15,7 +15,6 @@ import static org.junit.Assert.*;
  * Unit tests for BasicRawParser class
  * Created by Gilad Ber on 5/13/14.
  */
-@SuppressWarnings("unused")
 public class BasicRawParserTest
 {
 	private BasicRawParser parser;

@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
 public class ChannelFileData
 {
 	private static final RowDataToFileChannelConverter CONVERTER = new RowDataToFileChannelConverter();
-	private final List<Line> rowData;
-	private final List<FileChannel> channels;
-	private final List<String> titles;
-	private final List<String> comments;
+	private final List<Line> rowData = new ArrayList<>();
+	private final List<FileChannel> channels = new ArrayList<>();
+	private final List<String> titles = new ArrayList<>();
+	private final List<String> comments = new ArrayList<>();
 
 	private ChannelFileData(List<Line> rowData, List<FileChannel> channels, List<String> comments)
 	{
-		this.channels = channels;
-		this.rowData = rowData;
-		this.titles = extractTitles(this.channels);
-		this.comments = comments;
+		this.channels.addAll(channels);
+		this.rowData.addAll(rowData);
+		this.titles.addAll(extractTitles(this.channels));
+		this.comments.addAll(comments);
 	}
 
 	public static ChannelFileData create(List<Line> rowData, List<String> titles, List<String> comments)
@@ -34,12 +34,12 @@ public class ChannelFileData
 
 	public List<String> getTitles()
 	{
-		return titles;
+		return Collections.unmodifiableList(titles);
 	}
 
 	public List<Line> getRowData()
 	{
-		return rowData;
+		return Collections.unmodifiableList(rowData);
 	}
 
 	public List<FileChannel> getChannels()
@@ -67,7 +67,7 @@ public class ChannelFileData
 
 	public List<String> getComments()
 	{
-		return comments;
+		return Collections.unmodifiableList(comments);
 	}
 
 	private List<String> extractTitles(List<FileChannel> channels)

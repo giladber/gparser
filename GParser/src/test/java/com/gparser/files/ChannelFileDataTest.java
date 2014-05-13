@@ -1,6 +1,7 @@
 package com.gparser.files;
 
 import com.gparser.parsing.Line;
+import com.gparser.parsing.LineFactory;
 import com.gparser.tests.mock.RandomChannelFileDataBuilder;
 import com.gparser.utils.StringUtils;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -60,6 +62,57 @@ public class ChannelFileDataTest
 	public void testLongChannel()
 	{
 		fileData.addChannel(ofSize(fileData.getRowData().size() + 1, "a"));
+	}
+
+	@Test
+	public void testCreate()
+	{
+		LineFactory factory = new LineFactory();
+		List<Line> data = Stream.of("x1 x1 x1", "x2 x2 x2", "x3 x3 x3", "x4 x4 x4", "x5 x5 x5").
+			map(factory::next).
+			collect(toList());
+
+		List<String> titles = Stream.of("1", "2", "3").collect(toList());
+		List<String> comments = Stream.of("c1", "c2", "c3", "cc").collect(toList());
+		ChannelFileData channelFileData = ChannelFileData.create(data, titles, comments);
+
+		assertTrue(channelFileData.getTitles().size() == 3 &&
+			channelFileData.getComments().size() == 4 &&
+			channelFileData.getRowData().size() == 5);
+
+		assertTrue(listsEqual(data, channelFileData.getRowData()));
+	}
+
+	@Test
+	public void testImmutable()
+	{
+		LineFactory factory = new LineFactory();
+		List<Line> data = Stream.of("x1 x1 x1", "x2 x2 x2", "3 3 3", "4 4 4", "5 5 5", "6 6 6").
+			map(factory::next).
+			collect(toList());
+		List<String> titles = Stream.of("1", "2", "3").collect(toList());
+		List<String> comments = Stream.of("a", "b", "c", "d", "e").collect(toList());
+
+		ChannelFileData channelFileData = ChannelFileData.create(data, titles, comments);
+
+		List<Line> oldData = copy(data);
+		List<String> oldTitles = copy(titles);
+		List<String> oldComments = copy(comments);
+		data.add(new Line(1L, "abcd"));
+		titles.add("aaaaaaasdasd");
+		comments.add("blah");
+
+		assertTrue(listsEqual(channelFileData.getComments(), oldComments));
+		assertTrue(listsEqual(channelFileData.getRowData(), oldData));
+		assertTrue(listsEqual(channelFileData.getTitles(), oldTitles));
+	}
+
+	private <T> List<T> copy(List<T> from)
+	{
+		List<T> newList = new ArrayList<>(from.size());
+		newList.addAll(from);
+
+		return newList;
 	}
 
 	@Test
