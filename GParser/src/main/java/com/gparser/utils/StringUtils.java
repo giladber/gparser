@@ -5,6 +5,7 @@ import com.gparser.parsing.Line;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,7 +27,12 @@ public final class StringUtils
 
 	public static String[] splitBySpaces(String str)
 	{
-		return str.split("\\s+");
+		return splitBySpaces(str != null ? Optional.of(str) : Optional.<String>empty());
+	}
+
+	private static String[] splitBySpaces(Optional<String> opt)
+	{
+		return opt.map(s -> s.split("\\s+")).orElse(new String[0]);
 	}
 
 	public static String[] lineToArray(Line line)

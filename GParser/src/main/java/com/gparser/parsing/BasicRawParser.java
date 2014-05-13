@@ -1,10 +1,8 @@
 package com.gparser.parsing;
 
-import com.gparser.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.stream.Stream;
 
 /**
@@ -32,7 +30,7 @@ public class BasicRawParser implements StringParser
 	 * it is the caller's responsibility to make sure this is not an infinite stream, otherwise the method will
 	 * never terminate.
 	 */
-	public ParsedFileData parse(Stream<Line> linesStream, String sourceName) throws IOException
+	public ParsedFileData parse(Stream<Line> linesStream, String sourceName)
 	{
 		linesStream.
 			map(line -> new Line(line.getIndex(), line.getData().trim())).
@@ -52,7 +50,8 @@ public class BasicRawParser implements StringParser
 				}
 			});
 
-		logger.info("Parsed file {} to memory. Result has {} commented lines, {} channels and {} data lines", sourceName, model.getCommentLines().size(), StringUtils.splitBySpaces(model.getTitleLine()).length, model.getData().size());
-		return builder.build(model, sourceName);
+		ParsedFileData result = builder.build(model, sourceName);
+		logger.info("Parsed file {} to memory. Result has {} commented lines, {} channels and {} data lines", sourceName, result.getCommentedLines().size(), result.getTitles().size(), result.getDataLines().size());
+		return result;
 	}
 }

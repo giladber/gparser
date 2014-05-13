@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 public class ChannelFileData
 {
-	public static final RowDataToFileChannelConverter CONVERTER = new RowDataToFileChannelConverter();
+	private static final RowDataToFileChannelConverter CONVERTER = new RowDataToFileChannelConverter();
 	private final List<Line> rowData;
 	private final List<FileChannel> channels;
 	private final List<String> titles;
