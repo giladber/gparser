@@ -1,5 +1,7 @@
 package com.gparser.validation;
 
+import java.util.Objects;
+
 /**
  * This class defined the model for results of a validation test.
  * Created by Gilad Ber on 4/5/14.
@@ -17,6 +19,7 @@ public class ValidationResult
 
 	public ValidationResult compose(ValidationResult other)
 	{
+		Objects.requireNonNull(other);
 		boolean success = this.succeeded && other.succeeded;
 		String msg = success ? "Validation succeeded" : "Validation failed: " + this.msg + ", " + other.msg;
 		return new ValidationResult(success, msg);

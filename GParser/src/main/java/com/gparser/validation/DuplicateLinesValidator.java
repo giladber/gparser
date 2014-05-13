@@ -6,10 +6,7 @@ import com.gparser.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,6 +25,10 @@ public class DuplicateLinesValidator implements Validator
 
 	public DuplicateLinesValidator(int numIndependentChannels)
 	{
+		if (numIndependentChannels < 0)
+		{
+			throw new IllegalArgumentException("Number of independent channels must be >= 0, is: " + numIndependentChannels);
+		}
 		this.numIndependentChannels = numIndependentChannels;
 	}
 
@@ -37,9 +38,11 @@ public class DuplicateLinesValidator implements Validator
 	 * for all independent channels.
 	 * It is assumed that the independent channels are the first channels.
 	 */
-	public ValidationResult validate(ChannelFileData data)
+	public ValidationResult validate(Optional<ChannelFileData> fileDataOptional)
 	{
+		ChannelFileData data = fileDataOptional.orElse(ChannelFileData.empty());
 		Set<List<String>> channels = new HashSet<>();
+
 		Stream<String> resultsStream = data.getRowData().stream().
 			map(line -> {
 				String[] split = StringUtils.splitBySpaces(line.getData());

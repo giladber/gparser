@@ -2,6 +2,9 @@ package com.gparser.validation;
 
 import com.gparser.files.ChannelFileData;
 
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * Basic interface for file data validation.
  * Implementing classes should be aware *not* to change any state of the input data.
@@ -15,15 +18,18 @@ import com.gparser.files.ChannelFileData;
 @FunctionalInterface
 public interface Validator
 {
-	public ValidationResult validate(ChannelFileData data);
+	public static final Validator EMPTY = cfd -> ValidationResult.emptySuccess();
+
+	public ValidationResult validate(Optional<ChannelFileData> data);
 
 	public default Validator compose(Validator other)
 	{
+		Objects.requireNonNull(other);
 		return cfd -> this.validate(cfd).compose(other.validate(cfd));
 	}
 
 	public static Validator empty()
 	{
-		return cfd -> ValidationResult.emptySuccess();
+		return EMPTY;
 	}
 }

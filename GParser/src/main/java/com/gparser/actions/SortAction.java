@@ -60,14 +60,7 @@ public class SortAction implements ChannelAction
 			map(val -> sortTypeFactor * val).
 			findFirst();
 
-		result = intermediateResult.orElse(result);
-
-		if (result == 0)
-		{
-			logger.warn("Result should not be 0! \nline1 = {} \nline2 = {}", s1, s2);
-		}
-
-		return result;
+		return intermediateResult.orElse(result);
 	}
 
 }

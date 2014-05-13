@@ -13,7 +13,7 @@ import java.io.IOException;
  * Utility class for creating ChannelFileData mocks;
  * Created by Gilad Ber on 4/12/14.
  */
-public class ChannelFileDataMockFactory
+public class ChannelFileDataFactory
 {
 
 	public ChannelFileData build(String fileLoc, String commentIndicator, String titleIndicator) throws IOException

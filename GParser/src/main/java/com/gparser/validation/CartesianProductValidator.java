@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -32,12 +33,17 @@ public class CartesianProductValidator implements Validator
 
 	public CartesianProductValidator(int numIndependentChannels)
 	{
+		if (numIndependentChannels < 0)
+		{
+			throw new IllegalArgumentException("Number of independent channels must be >= 0, is: " + numIndependentChannels);
+		}
 		this.numIndependentChannels = numIndependentChannels;
 	}
 
 	@Override
-	public ValidationResult validate(ChannelFileData data)
+	public ValidationResult validate(Optional<ChannelFileData> fileDataOptional)
 	{
+		ChannelFileData data = fileDataOptional.orElse(ChannelFileData.empty());
 		if (data.getRowData().size() == 0)
 		{
 			logger.info("Cartesian product validation successful: Empty input");
@@ -46,7 +52,7 @@ public class CartesianProductValidator implements Validator
 
 		ChannelFileData sorted = new SortAction(numIndependentChannels, true).apply(data);
 		DuplicateLinesValidator duplicateLinesValidator = new DuplicateLinesValidator(numIndependentChannels);
-		ValidationResult duplicateValidationResult = duplicateLinesValidator.validate(sorted);
+		ValidationResult duplicateValidationResult = duplicateLinesValidator.validate(Optional.of(sorted));
 		if (!duplicateValidationResult.isSucceeded())
 		{
 			ValidationResult result = new ValidationResult(false, NOT_CARTESIAN_PRODUCT_MSG + duplicateValidationResult.getMsg());
@@ -86,7 +92,7 @@ public class CartesianProductValidator implements Validator
 		Iterator<Line> it = sorted.getRowData().iterator();
 		return cartesianLines.stream().sequential().
 			map(line -> new ComparedLine(it.hasNext() ? it.next() : new Line(line.getIndex(), EMPTY_LINE), line.getData())).
-			filter(cl -> !StringUtils.compareRowData(cl.line.getData(), cl.compared, numIndependentChannels)).
+			filter(cl -> !StringUtils.areLinesEqual(cl.line.getData(), cl.compared, numIndependentChannels)).
 			limit(MAX_BAD_LINES).
 			collect(Collectors.toList());
 	}

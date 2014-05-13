@@ -2,10 +2,7 @@ package com.gparser.utils;
 
 import com.gparser.parsing.Line;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,7 +57,17 @@ public final class StringUtils
 			collect(Collectors.toList());
 	}
 
-	public static boolean compareRowData(String line1, String line2, int numParams)
+	/**
+	 * Checks whether the input lines are equal, comparing the first numParams elements of each line.
+	 *
+	 * @param line1     first line to compare
+	 * @param line2     second line to compare
+	 * @param numParams number of elements to check in each line
+	 * @return whether the two lines' first numParams elements are equal or not, given that they have the same number of
+	 * elements and both at least have numParams elements.
+	 * @throws java.lang.NumberFormatException if any of the compared elements can not be parsed as a double.
+	 */
+	public static boolean areLinesEqual(String line1, String line2, int numParams) throws NumberFormatException
 	{
 		String[] split1 = StringUtils.splitBySpaces(line1);
 		String[] split2 = StringUtils.splitBySpaces(line2);
@@ -70,14 +77,10 @@ public final class StringUtils
 			return false;
 		}
 
-		for (int i = 0; i < numParams; i++)
-		{
-			if (Double.parseDouble(split1[i]) != Double.parseDouble(split2[i]))
-			{
-				return false;
-			}
-		}
-
-		return true;
+		Iterator<Double> it = Arrays.stream(split2).map(Double::parseDouble).iterator();
+		return Arrays.stream(split1).
+			limit(numParams).
+			mapToDouble(Double::parseDouble).
+			allMatch(d -> d == it.next());
 	}
 }

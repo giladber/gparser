@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 public class ChannelFileData
 {
 	private static final RowDataToFileChannelConverter CONVERTER = new RowDataToFileChannelConverter();
+	private static final ChannelFileData EMPTY = new Empty();
 	private final List<Line> rowData = new ArrayList<>();
 	private final List<FileChannel> channels = new ArrayList<>();
 	private final List<String> titles = new ArrayList<>();
 	private final List<String> comments = new ArrayList<>();
 
-	private ChannelFileData(List<Line> rowData, List<FileChannel> channels, List<String> comments)
+	protected ChannelFileData(List<Line> rowData, List<FileChannel> channels, List<String> comments)
 	{
 		this.channels.addAll(channels);
 		this.rowData.addAll(rowData);
@@ -30,6 +31,11 @@ public class ChannelFileData
 	{
 		List<FileChannel> channels = CONVERTER.toChannels(rowData, titles);
 		return new ChannelFileData(rowData, channels, comments);
+	}
+
+	public static ChannelFileData empty()
+	{
+		return EMPTY;
 	}
 
 	public List<String> getTitles()
@@ -114,6 +120,14 @@ public class ChannelFileData
 			{
 				throw new IllegalArgumentException("Missing data in line: " + line);
 			}
+		}
+	}
+
+	private static final class Empty extends ChannelFileData
+	{
+		Empty()
+		{
+			super(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
 		}
 	}
 }

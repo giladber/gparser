@@ -2,7 +2,7 @@ package com.gparser.tests.jmh.actions;
 
 import com.gparser.actions.CompleteAction;
 import com.gparser.files.ChannelFileData;
-import com.gparser.tests.mock.ChannelFileDataMockFactory;
+import com.gparser.tests.mock.ChannelFileDataFactory;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.io.IOException;
 @SuppressWarnings("unused")
 public class CompleteActionPerformanceTest
 {
-	public static final ChannelFileDataMockFactory CFD_FACTORY = new ChannelFileDataMockFactory();
+	public static final ChannelFileDataFactory CFD_FACTORY = new ChannelFileDataFactory();
 	public static final String TITLE_INDICATOR = "%%";
 	public static final String COMMENT_INDICATOR = "%#";
 	private ChannelFileData smallData;

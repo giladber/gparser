@@ -1,11 +1,12 @@
 package com.gparser.tests.jmh.validations;
 
 import com.gparser.files.ChannelFileData;
-import com.gparser.tests.mock.ChannelFileDataMockFactory;
+import com.gparser.tests.mock.ChannelFileDataFactory;
 import com.gparser.validation.CartesianProductValidator;
 import org.openjdk.jmh.annotations.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Performance test for Cartesian product validation.
@@ -15,7 +16,7 @@ import java.io.IOException;
 @SuppressWarnings("unused")
 public class CartesianProductValidatorPerformanceTest
 {
-	public static final ChannelFileDataMockFactory CFD_FACTORY = new ChannelFileDataMockFactory();
+	public static final ChannelFileDataFactory CFD_FACTORY = new ChannelFileDataFactory();
 	public static final String TITLE_INDICATOR = "%%";
 	public static final String COMMENT_INDICATOR = "%#";
 	private CartesianProductValidator validator;
@@ -46,30 +47,30 @@ public class CartesianProductValidatorPerformanceTest
 	@GenerateMicroBenchmark
 	public void validateSmallCartesianData()
 	{
-		validator.validate(smallData);
+		validator.validate(Optional.of(smallData));
 	}
 
 	@GenerateMicroBenchmark
 	public void validateVerySmallCartesianData()
 	{
-		validator.validate(verySmallData);
+		validator.validate(Optional.of(verySmallData));
 	}
 
 	@GenerateMicroBenchmark
 	public void validateMediumCartesianData()
 	{
-		validator.validate(mediumData);
+		validator.validate(Optional.of(mediumData));
 	}
 
 	@GenerateMicroBenchmark
 	public void validateLargeCartesianData()
 	{
-		validator.validate(largeData);
+		validator.validate(Optional.of(largeData));
 	}
 
 	@GenerateMicroBenchmark
 	public void validateLargeNonCartesianData()
 	{
-		validator.validate(largeNonCartesianData);
+		validator.validate(Optional.of(largeNonCartesianData));
 	}
 }
