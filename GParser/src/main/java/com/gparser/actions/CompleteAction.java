@@ -18,18 +18,30 @@ import java.util.stream.Collectors;
 public class CompleteAction implements ChannelAction
 {
 	private final int channelNumToComplete;
+	private final int numIndependentChannels;
 	private final double completeValue;
 	private static final Logger logger = LoggerFactory.getLogger(CompleteAction.class);
 
-	public CompleteAction(int channelNumToComplete, double completeValue)
+	public CompleteAction(int channelNumToComplete, double completeValue, int numIndependentChannels)
 	{
+		if (channelNumToComplete < 1)
+		{
+			throw new IllegalArgumentException("Channel # to complete must be > 0, is: " + channelNumToComplete);
+		}
+		if (numIndependentChannels < channelNumToComplete)
+		{
+			throw new IllegalArgumentException("Number of independent channels must be >= " + (channelNumToComplete + 1) + ", is: " + numIndependentChannels);
+		}
+
 		this.channelNumToComplete = channelNumToComplete - 1;
 		this.completeValue = completeValue;
+		this.numIndependentChannels = numIndependentChannels;
 	}
 
 	@Override
 	public ChannelFileData apply(ChannelFileData data)
 	{
+		validateChannelNum(data);
 		List<Line> rows = data.getRowData();
 		Optional<Double> closestValue = findClosestValue(rows);
 		if (completionNotNeeded(closestValue))
@@ -42,7 +54,16 @@ public class CompleteAction implements ChannelAction
 		completedRows.addAll(rows);
 		ChannelFileData result = ChannelFileData.create(completedRows, data.getTitles(), data.getComments());
 		logger.info("Applied complete action for channel {} with completion value {}", channelNumToComplete + 1, completeValue);
-		return result;
+		return new SortAction(numIndependentChannels, true).apply(result);
+	}
+
+	private void validateChannelNum(ChannelFileData data)
+	{
+		if (data.getChannels().size() <= channelNumToComplete)
+		{
+			throw new IllegalArgumentException("Attempted to complete channel " + channelNumToComplete + " but input has " +
+				data.getChannels().size() + " channels");
+		}
 	}
 
 	private boolean completionNotNeeded(Optional<Double> closestValue)

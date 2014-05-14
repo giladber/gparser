@@ -53,8 +53,9 @@ public class ChannelFileData
 		return Collections.unmodifiableList(channels);
 	}
 
-	public void addChannel(FileChannel channel)
+	public ChannelFileData addChannel(FileChannel channel)
 	{
+		Objects.requireNonNull(channel);
 		if (channel.getData().size() != this.rowData.size())
 		{
 			throw new IllegalArgumentException("Illegal channel size: must be " + rowData.size());
@@ -69,6 +70,8 @@ public class ChannelFileData
 		rowData.addAll(newLines);
 		channels.add(channel);
 		titles.add(channel.getTitle());
+
+		return this;
 	}
 
 	public List<String> getComments()
@@ -121,6 +124,45 @@ public class ChannelFileData
 				throw new IllegalArgumentException("Missing data in line: " + line);
 			}
 		}
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+		{
+			return true;
+		}
+		if (o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+
+		ChannelFileData that = (ChannelFileData) o;
+
+		if (!comments.equals(that.comments))
+		{
+			return false;
+		}
+		if (!rowData.equals(that.rowData))
+		{
+			return false;
+		}
+		if (!titles.equals(that.titles))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = rowData.hashCode();
+		result = 31 * result + titles.hashCode();
+		result = 31 * result + comments.hashCode();
+		return result;
 	}
 
 	private static final class Empty extends ChannelFileData

@@ -5,6 +5,7 @@ import com.gparser.files.FileChannel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Action to add new channels to an existing channel file data object.
@@ -16,6 +17,7 @@ public class AddChannelsAction implements ChannelAction
 
 	public AddChannelsAction(List<FileChannel> channels)
 	{
+		Objects.requireNonNull(channels);
 		this.channels.addAll(channels);
 	}
 

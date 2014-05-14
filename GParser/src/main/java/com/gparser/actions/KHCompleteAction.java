@@ -34,8 +34,8 @@ public class KHCompleteAction implements ChannelAction
 			stream(input.getChannelBounds()).
 			sequential().
 			flatMap(arr -> {
-				CompleteAction action1 = new CompleteAction(counter.get(), arr[0]);
-				CompleteAction action2 = new CompleteAction(counter.getAndIncrement(), arr[1]);
+				CompleteAction action1 = new CompleteAction(counter.get(), arr[0], input.getNumIndependentChannels());
+				CompleteAction action2 = new CompleteAction(counter.getAndIncrement(), arr[1], input.getNumIndependentChannels());
 				return Arrays.stream(new CompleteAction[]{action1, action2});
 			}).
 			collect(Collectors.toList());

@@ -2,6 +2,8 @@ package com.gparser.actions;
 
 import com.gparser.files.ChannelFileData;
 
+import java.util.Objects;
+
 /**
  * A channel action is an action which is performed on data with channel-like structure.
  * Channel actions *should not* change the underlying data of the input structure, instead they return
@@ -31,6 +33,7 @@ public interface ChannelAction
 	 */
 	public default ChannelAction compose(ChannelAction other)
 	{
+		Objects.requireNonNull(other);
 		return (cfd -> this.apply(other.apply(cfd)));
 	}
 

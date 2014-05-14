@@ -13,6 +13,7 @@ public class ValidationResult
 
 	public ValidationResult(boolean success, String msg)
 	{
+		Objects.requireNonNull(msg);
 		this.succeeded = success;
 		this.msg = msg;
 	}

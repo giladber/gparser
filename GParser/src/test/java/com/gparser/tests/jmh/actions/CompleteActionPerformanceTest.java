@@ -33,7 +33,7 @@ public class CompleteActionPerformanceTest
 			this.verySmallData = CFD_FACTORY.build("C:/parser/result_verysmall.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
 			this.mediumData = CFD_FACTORY.build("C:/parser/result_medium.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
 			this.largeData = CFD_FACTORY.build("C:/parser/result_large.txt", COMMENT_INDICATOR, TITLE_INDICATOR);
-			this.action = new CompleteAction(3, -33);
+			this.action = new CompleteAction(3, -33, 3);
 		}
 		catch (IOException e)
 		{
