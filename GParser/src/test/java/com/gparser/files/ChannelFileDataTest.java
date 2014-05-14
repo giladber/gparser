@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -76,10 +77,10 @@ public class ChannelFileDataTest
 		List<String> comments = Stream.of("c1", "c2", "c3", "cc").collect(toList());
 		ChannelFileData channelFileData = ChannelFileData.create(data, titles, comments);
 
-		assertTrue(channelFileData.getTitles().size() == 3 &&
-			channelFileData.getComments().size() == 4 &&
-			channelFileData.getRowData().size() == 5);
-
+		assertEquals(channelFileData.getTitles().size(), 3);
+		assertEquals(channelFileData.getChannels().size(), 3);
+		assertEquals(channelFileData.getComments().size(), 4);
+		assertEquals(channelFileData.getRowData().size(), 5);
 		assertTrue(listsEqual(data, channelFileData.getRowData()));
 	}
 

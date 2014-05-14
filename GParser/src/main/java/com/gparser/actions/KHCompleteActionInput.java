@@ -1,6 +1,7 @@
 package com.gparser.actions;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Input class for the data required to create a KHCompleteAction object.
@@ -13,14 +14,22 @@ public class KHCompleteActionInput
 
 	public KHCompleteActionInput(int numIndependentChannels, double[][] channelBounds)
 	{
-		boolean integrityCheck = channelBounds != null && Arrays.stream(channelBounds).
+		Objects.requireNonNull(channelBounds);
+		Arrays.stream(channelBounds).forEach(Objects::requireNonNull);
+
+		if (numIndependentChannels < 1)
+		{
+			throw new IllegalArgumentException("Number of independent channels must be > 0; is: " + numIndependentChannels);
+		}
+
+		boolean integrityCheck = Arrays.stream(channelBounds).
 			map(arr -> arr.length == 2).
 			reduce((a, b) -> a && b).
 			orElse(false) && channelBounds.length == numIndependentChannels;
 
 		if (!integrityCheck)
 		{
-			throw new IllegalArgumentException("Bounds array must be 2 times the length of the number of indenpendent channels!");
+			throw new IllegalArgumentException("Bounds array must be 2 times the length of the number of independent channels!");
 		}
 
 		this.numIndependentChannels = numIndependentChannels;

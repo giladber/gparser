@@ -2,6 +2,7 @@ package com.gparser.actions;
 
 import com.gparser.files.ChannelFileData;
 import com.gparser.parsing.Line;
+import com.gparser.parsing.LineFactory;
 import com.gparser.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,11 @@ public class SortAction implements ChannelAction
 
 	public SortAction(int numIndependentChannels, boolean ascending)
 	{
+		if (numIndependentChannels < 1)
+		{
+			throw new IllegalArgumentException("Number of independent channels must be > 0, is: " + numIndependentChannels);
+		}
+
 		this.numIndependentChannels = numIndependentChannels;
 		this.ascending = ascending;
 	}
@@ -33,8 +39,11 @@ public class SortAction implements ChannelAction
 	@Override
 	public ChannelFileData apply(ChannelFileData data)
 	{
+		LineFactory factory = new LineFactory();
 		List<Line> sortedRowData = data.getRowData().stream().
 			sorted(this::compareLines).
+			map(Line::getData).
+			map(factory::next).
 			collect(Collectors.toList());
 
 		ChannelFileData channelFileData = ChannelFileData.create(sortedRowData, data.getTitles(), data.getComments());

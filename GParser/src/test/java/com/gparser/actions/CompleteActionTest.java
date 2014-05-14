@@ -132,7 +132,6 @@ public class CompleteActionTest
 		long num3 = countValuesInChannel(ch2, 3);
 		assertEquals(num3, num7);
 
-		//		assertFollowing(ch1, -180, 90);
 		assertFollowing(ch2, 5, 7);
 	}
 

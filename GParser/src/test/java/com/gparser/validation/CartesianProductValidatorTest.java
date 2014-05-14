@@ -99,10 +99,11 @@ public class CartesianProductValidatorTest
 	{
 		assertTrue(val0.validate(Optional.empty()).isSucceeded());
 		assertTrue(val0.validate(Optional.of(ChannelFileData.empty())).isSucceeded());
-		assertFalse(val0.validate(Optional.of(smallCartesianData)).isSucceeded());
-		assertFalse(val0.validate(Optional.of(largeCartesianData)).isSucceeded());
-		assertFalse(val0.validate(Optional.of(largeNonCartesianData)).isSucceeded());
-		assertFalse(val0.validate(Optional.of(duplicateLinesData)).isSucceeded());
+	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testZeroChannelsValidatorNonEmptyData()
+	{
+		val0.validate(Optional.of(smallCartesianData));
 	}
 }

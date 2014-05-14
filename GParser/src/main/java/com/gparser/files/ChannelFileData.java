@@ -133,7 +133,7 @@ public class ChannelFileData
 		{
 			return true;
 		}
-		if (o == null || getClass() != o.getClass())
+		if (!(o instanceof ChannelFileData))
 		{
 			return false;
 		}
