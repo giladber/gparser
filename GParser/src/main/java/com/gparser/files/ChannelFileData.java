@@ -5,6 +5,7 @@ import com.gparser.utils.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Class representing data of a channel file.
@@ -96,30 +97,35 @@ public class ChannelFileData
 	{
 		public List<FileChannel> toChannels(List<Line> rowData, List<String> titles)
 		{
-			List<FileChannel> channels = new ArrayList<>(titles.size());
-			titles.stream().forEachOrdered(title -> channels.add(new FileChannel(title)));
+			List<List<String>> channelDatum = IntStream.range(0, titles.size()).
+				boxed().
+				map(x -> new ArrayList<String>()).
+				collect(Collectors.toList());
 
 			rowData.stream().
 				filter(s -> !s.getData().isEmpty()).
 				forEachOrdered(line -> {
-					validateLineChannelNum(channels, line);
-					Iterator<FileChannel> channelIterator = channels.iterator();
+					validateLineChannelNum(titles.size(), line);
+					Iterator<List<String>> channelIterator = channelDatum.iterator();
 
 					Arrays.stream(StringUtils.lineToArray(line)).
-						forEachOrdered(val -> channelIterator.next().getData().add(val));
+						forEach(s -> channelIterator.next().add(s));
 				});
 
-			return channels;
+			Iterator<String> titleIterator = titles.iterator();
+			return channelDatum.stream().
+				map(list -> new FileChannel(titleIterator.next(), list)).
+				collect(Collectors.toList());
 		}
 
-		private void validateLineChannelNum(List<FileChannel> channels, Line line)
+		private void validateLineChannelNum(int numChannels, Line line)
 		{
 			int length = StringUtils.lineToArray(line).length;
-			if (length > channels.size())
+			if (length > numChannels)
 			{
 				throw new IllegalArgumentException("Excess data in line: " + line);
 			}
-			else if (length < channels.size())
+			else if (length < numChannels)
 			{
 				throw new IllegalArgumentException("Missing data in line: " + line);
 			}

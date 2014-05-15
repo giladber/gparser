@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * A channel action for completing data in the channel file.
+ * The data returned by a complete action is sorted.
  * Created by Gilad Ber on 4/5/14.
  */
 public class CompleteAction implements ChannelAction

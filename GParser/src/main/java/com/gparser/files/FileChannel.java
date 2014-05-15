@@ -1,6 +1,7 @@
 package com.gparser.files;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,12 @@ public class FileChannel
 
 	public List<String> getData()
 	{
-		return data;
+		return Collections.unmodifiableList(data);
+	}
+
+	public void addLine(String s)
+	{
+		data.add(s);
 	}
 
 	@Override

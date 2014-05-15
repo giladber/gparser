@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Complete action for KH.
@@ -32,11 +33,10 @@ public class KHCompleteAction implements ChannelAction
 		final AtomicInteger counter = new AtomicInteger(1);
 		List<ChannelAction> completeActions = Arrays.
 			stream(input.getChannelBounds()).
-			sequential().
 			flatMap(arr -> {
 				CompleteAction action1 = new CompleteAction(counter.get(), arr[0], input.getNumIndependentChannels());
 				CompleteAction action2 = new CompleteAction(counter.getAndIncrement(), arr[1], input.getNumIndependentChannels());
-				return Arrays.stream(new CompleteAction[]{action1, action2});
+				return Stream.of(action1, action2);
 			}).
 			collect(Collectors.toList());
 
