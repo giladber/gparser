@@ -4,9 +4,6 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
-import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
-
 /**
  * Example usages of java.util.Optional class in Java 8.
  * Created by Gilad Ber on 5/12/14.
@@ -17,6 +14,7 @@ public class Optionals
 	{
 		example(500);
 		example2();
+		example2WithoutOptional();
 	}
 
 
@@ -33,20 +31,43 @@ public class Optionals
 
 	public static void example2()
 	{
-		Optional<String> firstName = ofNullable(callToServiceWhichMayReturnNull());
-		Optional<String> lastName = ofNullable(callToServiceWhichMayReturnNull());
-		Optional<String> address = ofNullable(callToServiceWhichMayReturnNull());
 
-		String name = firstName.
-			flatMap(first -> of(first + " " + lastName.orElse("last"))).
-			flatMap(full -> of(full + " @ " + address.orElse("Hagoshrim"))).
-			orElse("No name :(");
-
-		System.out.println(name);
+		optionalCall1().
+			flatMap(Optionals::optionalCall2).
+			flatMap(Optionals::optionalCall3).
+			ifPresent(System.out::println);
 	}
 
-	private static String callToServiceWhichMayReturnNull()
+	public static void example2WithoutOptional()
 	{
-		return ThreadLocalRandom.current().nextBoolean() ? null : "bwah";
+		String s1 = optionalCall1().get();
+		if (s1 != null)
+		{
+			Integer x2 = optionalCall2(s1).get();
+			if (x2 != null)
+			{
+				String s3 = optionalCall3(x2).get();
+				if (s3 != null)
+				{
+					System.out.println(s3);
+				}
+			}
+		}
+	}
+
+
+	private static Optional<String> optionalCall1()
+	{
+		return Optional.ofNullable(Futures.randomString(10));
+	}
+
+	private static Optional<Integer> optionalCall2(String s)
+	{
+		return Optional.ofNullable(s.length());
+	}
+
+	private static Optional<String> optionalCall3(int x)
+	{
+		return Optional.ofNullable(Futures.randomString(x));
 	}
 }
